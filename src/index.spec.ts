@@ -1,39 +1,37 @@
-import simpleClient from ".";
-// TODO: finish making this actually test the changes...
+import {_getRessourceParam} from ".";
+
 describe("Data REST Client", () => {
-  describe("getList", () => {
-    it("should include the `Range` header in request (for Chrome compatibility purpose)", async () => {
-      const httpClient = jest.fn(() =>
-        Promise.resolve({
-          headers: new Headers({
-            "content-range": "0/4-8",
-          }),
+    describe("_getRessourceParam", () => {
+        it("should return correct id for root resource specified", () => {
+            const keyBindings = {
+                "post": "idPost"
+            }
+            const expected = "idPost"
+
+            const actual = _getRessourceParam("post", keyBindings)
+
+            expect(actual).toEqual(expected);
         })
-      );
-      const client = simpleClient("http://localhost:3000", httpClient);
 
-      await client.getList("posts", {
-        filter: {},
-        pagination: {
-          page: 1,
-          perPage: 10,
-        },
-        sort: {
-          field: "title",
-          order: "desc",
-        },
-      });
+        it("should return id for root resource NOT specified", () => {
+            const keyBindings = {
+                "post": "idPost"
+            }
+            const expected = null
 
-      expect(httpClient).toHaveBeenCalledWith(
-        "http://localhost:3000/posts?filter=%7B%7D&range=%5B0%2C9%5D&sort=%5B%22title%22%2C%22desc%22%5D",
-        {
-          headers: {
-            map: {
-              range: "posts=0-9",
-            },
-          },
-        }
-      );
-    });
-  });
+            const actual = _getRessourceParam("comment", keyBindings)
+
+            expect(actual).toEqual(expected);
+        })
+        it("should return correct id for root nested resource specified", () => {
+            const keyBindings = {
+                "post": "idPost"
+            }
+            const expected = "idPost"
+
+            const actual = _getRessourceParam("comment/123/post", keyBindings)
+
+            expect(actual).toEqual(expected);
+        })
+    })
 });
