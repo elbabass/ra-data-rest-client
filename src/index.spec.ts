@@ -1,35 +1,35 @@
-import {_getRessourceParam} from ".";
+import {ResourceDataUtils} from "./resourceDataUtils";
 
 describe("Data REST Client", () => {
     describe("_getRessourceParam", () => {
-        it("should return correct id for root resource specified", () => {
+        let resourceDataUtils: ResourceDataUtils;
+
+        beforeEach(() => {
             const keyBindings = {
                 "post": "idPost"
             }
+            resourceDataUtils = new ResourceDataUtils(keyBindings)
+        })
+
+        it("should return correct id for root resource specified", () => {
             const expected = "idPost"
 
-            const actual = _getRessourceParam("post", keyBindings)
+            const actual = resourceDataUtils.getRessourceIdName("post")
 
             expect(actual).toEqual(expected);
         })
 
         it("should return id for root resource NOT specified", () => {
-            const keyBindings = {
-                "post": "idPost"
-            }
             const expected = null
 
-            const actual = _getRessourceParam("comment", keyBindings)
+            const actual = resourceDataUtils.getRessourceIdName("comment")
 
             expect(actual).toEqual(expected);
         })
         it("should return correct id for root nested resource specified", () => {
-            const keyBindings = {
-                "post": "idPost"
-            }
             const expected = "idPost"
 
-            const actual = _getRessourceParam("comment/123/post", keyBindings)
+            const actual = resourceDataUtils.getRessourceIdName("comment/123/post")
 
             expect(actual).toEqual(expected);
         })

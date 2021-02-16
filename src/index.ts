@@ -1,9 +1,11 @@
+/// declare module 'query-string'
 import {stringify} from "query-string";
-import {fetchUtils, DataProvider} from "ra-core";
+import {DataProvider, fetchUtils} from "ra-core";
+import {ResourceDataUtils} from "./resourceDataUtils";
 
 /**
  * Based on https://github.com/marmelab/react-admin/master/packages/ra-data-simple-rest
- * but extended to support non-'id' identifier names, as well as a response trasform function
+ * but extended to support non-'id' identifier names, as well as a response transform function
  *
  * Maps react-admin queries to a simple REST API
  *
@@ -96,14 +98,6 @@ const _reKeyFilter = (filter: any, reParam: string) => {
     return reFilter;
 };
 
-export const _getRessourceParam = (resource: string, keysByResource: any) => {
-    const resourceDecomposition = resource.split("/");
-    let nested = resourceDecomposition[resourceDecomposition.length - 1] || resource
-    console.log("Ressource recherchée : " + resource); // "compte-service/1234/biens"
-    console.log("Ressource imbriquée : " + nested); // "compte-service/1234/biens"
-    return nested in keysByResource ? keysByResource[nested] : null;
-};
-
 export default (
     apiUrl: string,
     keysByResource: any = {} /* ex: {'posts':'key',...} */,
@@ -114,7 +108,8 @@ export default (
     keysByResource: keysByResource,
     xFormBy: responseTransformsByResource,
     getList: (resource, params) => {
-        const reParam =  _getRessourceParam(resource, keysByResource);
+        const resourceDataUtils = new ResourceDataUtils(keysByResource)
+        const reParam = resourceDataUtils.getRessourceIdName(resource);
         const {page, perPage} = params.pagination;
         let {field, order} = params.sort;
         const reFilter = _reKeyFilter(params.filter, reParam);
@@ -162,7 +157,8 @@ export default (
     },
 
     getOne: (resource, params) => {
-        const reParam =_getRessourceParam(resource, keysByResource)
+        const resourceDataUtils = new ResourceDataUtils(keysByResource)
+        const reParam = resourceDataUtils.getRessourceIdName(resource)
 
         return httpClient(`${apiUrl}/${resource}/${params.id}`).then(
             ({json}) => ({
@@ -175,7 +171,8 @@ export default (
     },
 
     getMany: (resource, params) => {
-        const reParam = _getRessourceParam(resource, keysByResource);
+        const resourceDataUtils = new ResourceDataUtils(keysByResource)
+        const reParam = resourceDataUtils.getRessourceIdName(resource);
         let q = {};
         q[reParam ?? "id"] = params.ids;
         const query = {
@@ -191,7 +188,8 @@ export default (
     },
 
     getManyReference: (resource, params) => {
-        const reParam = _getRessourceParam(resource, keysByResource);
+        const resourceDataUtils = new ResourceDataUtils(keysByResource)
+        const reParam = resourceDataUtils.getRessourceIdName(resource);
         const {page, perPage} = params.pagination;
         let {field, order} = params.sort;
         const reFilter = _reKeyFilter(params.filter, reParam);
@@ -242,7 +240,8 @@ export default (
     },
 
     update: (resource, params) => {
-        const reParam = _getRessourceParam(resource, keysByResource);
+        const resourceDataUtils = new ResourceDataUtils(keysByResource)
+        const reParam = resourceDataUtils.getRessourceIdName(resource);
         const reData = _reKeyPayload(params.data, reParam);
         return httpClient(`${apiUrl}/${resource}/${params.id}`, {
             method: "PUT",
@@ -257,7 +256,8 @@ export default (
 
     // simple-rest doesn't handle provide an updateMany route, so we fallback to calling update n times instead
     updateMany: (resource, params) => {
-        const reParam = _getRessourceParam(resource, keysByResource);
+        const resourceDataUtils = new ResourceDataUtils(keysByResource)
+        const reParam = resourceDataUtils.getRessourceIdName(resource);
         const idKey = reParam ?? "id";
         return Promise.all(
             params.ids.map((id) => {
@@ -271,7 +271,8 @@ export default (
     },
 
     create: (resource, params) => {
-        const reParam = _getRessourceParam(resource, keysByResource);
+        const resourceDataUtils = new ResourceDataUtils(keysByResource)
+        const reParam = resourceDataUtils.getRessourceIdName(resource);
         const reData = _reKeyPayload(params.data, reParam);
         const idKey = reParam ?? "id";
         return httpClient(`${apiUrl}/${resource}`, {
@@ -283,7 +284,8 @@ export default (
     },
 
     delete: (resource, params) => {
-        const reParam = _getRessourceParam(resource, keysByResource);
+        const resourceDataUtils = new ResourceDataUtils(keysByResource)
+        const reParam = resourceDataUtils.getRessourceIdName(resource);
         return httpClient(`${apiUrl}/${resource}/${params.id}`, {
             method: "DELETE",
         }).then(({json}) => ({
@@ -296,7 +298,8 @@ export default (
 
     // simple-rest doesn't handle filters on DELETE route, so we fallback to calling DELETE n times instead
     deleteMany: (resource, params) => {
-        const reParam = _getRessourceParam(resource, keysByResource);
+        const resourceDataUtils = new ResourceDataUtils(keysByResource)
+        const reParam = resourceDataUtils.getRessourceIdName(resource);
         const idKey = reParam ?? "id";
         return Promise.all(
             params.ids.map((id) =>
