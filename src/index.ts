@@ -5,6 +5,7 @@ import {ResourceDataUtils} from "./resourceDataUtils";
 /**
  * Based on https://github.com/marmelab/react-admin/master/packages/ra-data-simple-rest
  * but extended to support non-'id' identifier names, as well as a response transform function
+ * also able to use nested resources like 'comments/243/posts'
  *
  * Maps react-admin queries to a simple REST API
  *
@@ -41,6 +42,7 @@ import {ResourceDataUtils} from "./resourceDataUtils";
  *        }
  *     )}>
  *         <Resource name="posts" list={PostList} />
+ *         <Resource name="comments/1234/posts" list={PostList} />
  *     </Admin>
  * );
  *

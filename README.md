@@ -1,7 +1,8 @@
 # ra-data-rest-client
+Based on [Zachry Baker's ra-data-rest-client](https://github.com/zachrybaker/ra-data-rest-client) with ability to use some kind of nested resources like ```posts/123/comments```
 
-Extends [marmelab/ra-data-simple-rest](https://github.com/marmelab/react-admin/tree/master/packages/ra-data-simple-rest) with
-the abilty to work with resources that do not use 'id' as their unique identifier property name on the server side, and
+The original module extends [marmelab/ra-data-simple-rest](https://github.com/marmelab/react-admin/tree/master/packages/ra-data-simple-rest) with
+the ability to work with resources that do not use 'id' as their unique identifier property name on the server side, and
 the ability to add a response transform function to a resource.
 
 ## Why another rest client?
@@ -73,6 +74,8 @@ const App = () => (
       }
     })}>
         <Resource name="posts" list={PostList} />
+        <Resource name="comments/1234/posts" list={PostList} />
+
     </Admin>
 );
 
