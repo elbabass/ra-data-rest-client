@@ -56,10 +56,7 @@
   "peerDependencies": {
     "ra-core": "^3.0.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/elbabass/ra-data-rest-client.git"
-  },
+  "repository": "git+https://github.com/elbabass/ra-data-rest-client.git",
   "scripts": {
     "build": "yarn run build-cjs && yarn run build-esm",
     "build-cjs": "rimraf ./lib && tsc",
