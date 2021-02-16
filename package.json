@@ -7,12 +7,12 @@
   "dependencies": {
     "final-form-arrays": "^3.0.2",
     "jsonexport": "^3.2.0",
+    "node-fetch": "^2.6.1",
     "query-string": "^5.1.1",
-    "ra-core": "^3.8.5",
-    "node-fetch": "^2.6.1"
+    "ra-core": "^3.8.5"
   },
   "deprecated": false,
-  "description": "Extends ra-data-simple-rest with the abilty to work with resources that do not use 'id' as their unique identifier property name.",
+  "description": "Extends ra-data-simple-rest with the ability to work with resources that do not use 'id' as their unique identifier property name.",
   "devDependencies": {
     "@babel/preset-env": "^7.12.16",
     "@babel/preset-react": "^7.12.13",

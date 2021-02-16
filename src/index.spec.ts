@@ -1,7 +1,7 @@
 import {ResourceDataUtils} from "./resourceDataUtils";
 
 describe("Data REST Client", () => {
-    describe("_getRessourceParam", () => {
+    describe("ResourceDataUtils", () => {
         let resourceDataUtils: ResourceDataUtils;
 
         beforeEach(() => {

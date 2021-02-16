@@ -1,4 +1,3 @@
-/// declare module 'query-string'
 import {stringify} from "query-string";
 import {DataProvider, fetchUtils} from "ra-core";
 import {ResourceDataUtils} from "./resourceDataUtils";
@@ -61,7 +60,7 @@ const _reKeyResponse = (json: any, key: string) => {
         delete json[key];
         return json;
     } else {
-        console.error("undhandled scenario of _reKeyResponse", key, json);
+        console.error("unhandled scenario of _reKeyResponse", key, json);
     }
 };
 const _xFormResponse = (json: any, xFormFn: any) => {
@@ -81,7 +80,7 @@ const _reKeyPayload = (data: any, reParam: string) => {
         return data;
     }
 
-    var {id, ...others} = data;
+    const {id, ...others} = data;
 
     others[reParam] = data.id;
     return others;
@@ -90,7 +89,7 @@ const _reKeyFilter = (filter: any, reParam: string) => {
     if (filter === null) {
         return null;
     }
-    var {id, ...reFilter} = filter;
+    const {id, ...reFilter} = filter;
 
     if (reParam !== null && id) {
         reFilter[reParam] = id;
@@ -132,7 +131,7 @@ export default (
                 ? {
                     // Chrome doesn't return `Content-Range` header if no `Range` is provided in the request.
                     headers: new Headers({
-                        Range: `${resource}=${rangeStart}-${rangeEnd}`,
+                        Range: `${resourceDataUtils.getNestedResource(resource)}=${rangeStart}-${rangeEnd}`,
                     }),
                 }
                 : {};
@@ -146,12 +145,12 @@ export default (
             return {
                 data: _xFormResponse(
                     _reKeyResponse(json, reParam),
-                    responseTransformsByResource[resource]
+                    responseTransformsByResource[resourceDataUtils.getNestedResource(resource)]
                 ),
                 total:
                     countHeader === "Content-Range"
-                        ? parseInt(headers.get("content-range").split("/").pop(), 10)
-                        : parseInt(headers.get(countHeader.toLowerCase())),
+                        ? parseInt(headers.get("content-range")?.split("/").pop() as string, 10)
+                        : parseInt(headers.get(countHeader.toLowerCase()) as string),
             };
         });
     },
@@ -173,7 +172,7 @@ export default (
     getMany: (resource, params) => {
         const resourceDataUtils = new ResourceDataUtils(keysByResource)
         const reParam = resourceDataUtils.getRessourceIdName(resource);
-        let q = {};
+        let q: any = {};
         q[reParam ?? "id"] = params.ids;
         const query = {
             filter: JSON.stringify(q),
@@ -233,8 +232,8 @@ export default (
                 ),
                 total:
                     countHeader === "Content-Range"
-                        ? parseInt(headers.get("content-range").split("/").pop(), 10)
-                        : parseInt(headers.get(countHeader.toLowerCase())),
+                        ? parseInt(headers.get("content-range")?.split("/").pop() as string, 10)
+                        : parseInt(headers.get(countHeader.toLowerCase()) as string),
             };
         });
     },
@@ -249,7 +248,7 @@ export default (
         }).then(({json}) => ({
             data: _xFormResponse(
                 _reKeyResponse(json, reParam),
-                responseTransformsByResource[resource]
+                responseTransformsByResource[resourceDataUtils.getNestedResource(resource)]
             ),
         }));
     },
@@ -291,7 +290,7 @@ export default (
         }).then(({json}) => ({
             data: _xFormResponse(
                 _reKeyResponse(json, reParam),
-                responseTransformsByResource[resource]
+                responseTransformsByResource[resourceDataUtils.getNestedResource(resource)]
             ),
         }));
     },
