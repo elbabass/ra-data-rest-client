@@ -1,4 +1,4 @@
-import {ResourceDataUtils} from "./resourceDataUtils";
+import {ResourceDataUtils} from "./index";
 
 describe("Data REST Client", () => {
     describe("ResourceDataUtils", () => {

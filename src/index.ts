@@ -1,6 +1,5 @@
 import {stringify} from "query-string";
 import {DataProvider, fetchUtils} from "ra-core";
-import {ResourceDataUtils} from "./resourceDataUtils";
 
 /**
  * Based on https://github.com/marmelab/react-admin/master/packages/ra-data-simple-rest
@@ -98,6 +97,26 @@ const _reKeyFilter = (filter: any, reParam: string) => {
     }
     return reFilter;
 };
+
+export class ResourceDataUtils {
+    private readonly keysByResource: any;
+
+    constructor(keyBindings: any) {
+        this.keysByResource = keyBindings
+    }
+
+    getNestedResource(resource: string) {
+        const resourceDecomposition = resource.split("/");
+        return resourceDecomposition[resourceDecomposition.length - 1] || resource;
+    }
+
+    getRessourceIdName(resource: string) {
+        let nested = this.getNestedResource(resource);
+        console.log("Ressource recherchée : " + resource); // "compte-service/1234/biens"
+        console.log("Ressource imbriquée : " + nested); // "biens"
+        return nested in this.keysByResource ? this.keysByResource[nested] : null;
+    }
+}
 
 export default (
     apiUrl: string,
