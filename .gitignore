@@ -106,3 +106,4 @@ esm/index.d.ts
 esm/index.js
 lib/index.d.ts
 lib/index.js
+.idea/
