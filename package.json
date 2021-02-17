@@ -41,7 +41,7 @@
     "esm",
     "src"
   ],
-  "homepage": "https://github.com/zachrybaker/ra-data-rest-client#readme",
+  "homepage": "https://github.com/elbabass/ra-data-rest-client#readme",
   "keywords": [
     "ra-data-simple-rest",
     "ra-data-rest-client",
@@ -66,5 +66,5 @@
   },
   "sideEffects": false,
   "types": "./lib/index.d.ts",
-  "version": "1.2.0"
+  "version": "1.2.1"
 }

@@ -112,8 +112,6 @@ export class ResourceDataUtils {
 
     getRessourceIdName(resource: string) {
         let nested = this.getNestedResource(resource);
-        console.log("Ressource recherchée : " + resource); // "compte-service/1234/biens"
-        console.log("Ressource imbriquée : " + nested); // "biens"
         return nested in this.keysByResource ? this.keysByResource[nested] : null;
     }
 }
